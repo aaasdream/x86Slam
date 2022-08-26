@@ -1,0 +1,130 @@
+echo "AKING Say : change ORB SLAM build.sh [make -j] to  [make -j2], otherwish will out of memory.Evnt you have a lot of swap."
+
+sudo apt update
+sudo apt install -y build-essential cmake git libgtk2.0-dev pkg-config  libswscale-dev libtbb2 libtbb-dev
+sudo apt install -y python-dev python3-dev python-numpy python3-numpy
+sudo apt install -y curl
+sudo apt install -y  libjpeg-dev libpng-dev libtiff-dev libjasper-dev 
+sudo apt install -y libavcodec-dev libavformat-dev
+sudo apt install -y libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
+sudo apt install -y libv4l-dev v4l-utils qv4l2 v4l2ucp libdc1394-22-dev
+sudo apt install -y libpython2.7-dev
+mkdir -p ~/orbslam3
+cd ~/orbslam3
+
+
+folder= "~/orbslam3"
+
+echo "** Remove other OpenCV first"
+#sudo sudo apt-get purge *libopencv*
+
+
+echo "** Install requirement"
+sudo apt-get update
+sudo apt-get install -y build-essential cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev
+sudo apt-get install -y libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
+sudo apt-get install -y python2.7-dev python3.6-dev python-dev python-numpy python3-numpy
+sudo apt-get install -y libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libdc1394-22-dev
+sudo apt-get install -y libv4l-dev v4l-utils qv4l2 v4l2ucp
+sudo apt-get install -y curl
+sudo apt-get update
+
+echo "** Download opencv-4.1.0"
+mkdir opencv
+cd opencv
+sudo apt install build-essential
+sudo apt install cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev
+sudo apt install libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev
+sudo apt install python3-dev python3-numpy
+sudo apt install ffmpeg
+sudo add-apt-repository "deb http://security.ubuntu.com/ubuntu xenial-security main"
+echo "** Download opencv-4.5.1"
+sudo apt install libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev \
+                 libjasper-dev libdc1394-22-dev libsnappy-dev libboost-all-dev \
+                 python3-dev python3-numpy ffmpeg cmake-qt-gui libopenblas-dev \
+                 tesseract-ocr libtesseract-dev libprotobuf-dev libleveldb-dev \
+                 libhdf5-serial-dev protobuf-compiler libatlas-base-dev \
+                 libgflags-dev libgoogle-glog-dev liblmdb-dev libfaac-dev \
+                 gfortran libgstreamer1.0-dev libatlas-base-dev libxvidcore-dev \
+                 libpng-dev libopenexr-dev libtiff-dev libwebp-dev \
+                 libmp3lame-dev libtheora-dev libvorbis-dev  \
+                 libopencore-amrwb-dev x264 v4l-utils libgdk-pixbuf2.0-dev \
+                 manpages-dev libopencore-amrnb-dev libgstreamer-plugins-base1.0-dev \
+                 libqt5widgets5 libqt5gui5 libqt5dbus5 libqt5network5 libqt5core5a \
+                 qtcreator qt5-default
+                 
+                 
+curl -L https://github.com/opencv/opencv/archive/refs/tags/4.6.0.zip -o opencv-4.6.0.zip
+curl -L https://github.com/opencv/opencv_contrib/archive/refs/tags/4.6.0.zip -o opencv_contrib-4.6.0.zip
+unzip opencv-4.6.0.zip 
+unzip opencv_contrib-4.6.0.zip 
+
+mkdir -p build && cd build
+# Configure
+cmake -DOPENCV_EXTRA_MODULES_PATH=../opencv_contrib-4.6.0/modules ../opencv-4.6.0
+make -j4
+sudo make install
+
+
+
+
+echo "==============Install Pangolin=========================="
+sudo apt install -y libgl1-mesa-dev
+sudo apt install -y libglew-dev
+sudo apt install -y libpython2.7-dev
+sudo apt install -y pkg-config
+sudo apt install -y ffmpeg libavcodec-dev libavutil-dev libavformat-dev  libswscale-dev libavdevice-dev
+sudo apt install -y libdc1394-22-dev libraw1394-dev
+sudo apt install -y libjpeg-dev libpng12-dev libtiff5-dev libopenexr-dev
+
+cd ~/orbslam3
+git clone https://github.com/stevenlovegrove/Pangolin.git
+cd Pangolin
+mkdir build && cd build
+cmake \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr/local \
+    ..
+make
+sudo make install 
+
+
+
+#==========================Install Eigen 3======================
+sudo apt-get install -y libblas-dev
+sudo apt-get install -y liblapack-dev
+sudo apt install  -y libeigen3-dev
+
+
+
+#=====================PCL for ROS:=============================
+sudo apt-get install -y libopenni2-dev
+sudo apt-get install -y ros-noetic-pcl-ros
+
+
+
+
+#==========================ORB SLAM3========================
+cd ~/orbslam3
+git clone https://github.com/UZ-SLAMLab/ORB_SLAM3.git ORB_SLAM3
+cd ORB_SLAM3
+chmod +x build.sh
+./build.sh
+
+
+#============================ORB SLAM ROS========================================
+cd ~/orbslam3/ORB_SLAM3
+export ROS_PACKAGE_PATH=${ROS_PACKAGE_PATH}:~/orbslam3/ORB_SLAM3/Examples/ROS
+echo "export ROS_PACKAGE_PATH=${ROS_PACKAGE_PATH}:~/orbslam3/ORB_SLAM3/Examples/ROS" >> ~/.bashrc
+chmod +x build_ros.sh
+./build_ros.sh
+
+
+
+
+
+
+
+
+
+
